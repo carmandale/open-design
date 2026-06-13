@@ -337,7 +337,7 @@ corepack enable && pnpm install
 pnpm tools-dev run web
 ```
 
-Node `~24`, pnpm `10.33.x`. Windows users, see [`docs/windows-troubleshooting.md`](docs/windows-troubleshooting.md). Full quickstart, env vars, Nix flake, and packaged build flow → [`QUICKSTART.md`](QUICKSTART.md). Prefer a visual walkthrough? Open the [quickstart presentations](docs/quickstart/) — the same guide set three ways (NYT data-viz, an NYC subway campaign, and the Vignelli Canon).
+Node `~24`, pnpm `10.33.x`. Windows users, see [`docs/windows-troubleshooting.md`](docs/windows-troubleshooting.md). Full quickstart, env vars, Nix flake, and packaged build flow → [`QUICKSTART.md`](QUICKSTART.md). New and not technical? Start with the [plain-English Get Started guide](docs/quickstart/get-started.html) — start the app, describe what you want, refine by chatting, with real screenshots. ([Same guide, three design styles](docs/quickstart/).)
 
 ### A full workflow — from brief to artifact
 

@@ -4,7 +4,7 @@
 
 Run the full product locally.
 
-> **Prefer a visual walkthrough?** Open the [quickstart presentations](docs/quickstart/) — this same guide set three ways (NYT data-viz, an NYC subway campaign, and the Vignelli Canon). Each is a self-contained HTML deck; scroll or use the arrow keys.
+> **New here and not technical?** Start with the [plain-English Get Started guide](docs/quickstart/get-started.html) — start the app, describe what you want (with copy-paste examples for a dashboard and a pitch deck), and refine by chatting, all with real screenshots. There's also the [same guide styled three ways](docs/quickstart/) (NYT data-viz, an NYC subway campaign, and the Vignelli Canon). Each is a self-contained HTML page; scroll or use the arrow keys.
 
 ## Environment requirements
 

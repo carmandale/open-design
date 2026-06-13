@@ -21,6 +21,19 @@
   h1{font-size:clamp(30px,5vw,48px);line-height:1.04;letter-spacing:-.02em;margin:0 0 14px}
   .lede{font-size:18px;color:#34353b;margin:0}
   .lede code{font-family:var(--mono);font-size:.88em;background:#0000000d;padding:1px 6px;border-radius:4px}
+  .featured{display:grid;grid-template-columns:1.05fr 1fr;gap:0;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:30px;text-decoration:none;color:inherit;
+    transition:transform .18s cubic-bezier(.23,1,.32,1),box-shadow .18s,border-color .18s}
+  .featured:hover{transform:translateY(-4px);box-shadow:0 22px 48px -26px #0009;border-color:#d8c8b6}
+  .featured .copy{padding:30px 34px;display:flex;flex-direction:column;justify-content:center}
+  .featured .tagline{display:inline-block;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:#c75f39;padding:5px 11px;border-radius:99px;margin-bottom:14px}
+  .featured h2{font-size:clamp(24px,3.4vw,34px);margin:0 0 10px;letter-spacing:-.02em;line-height:1.05}
+  .featured p{margin:0 0 16px;color:#48413b;font-size:15.5px}
+  .featured .go{font-size:14px;font-weight:700;color:#a84d2c}
+  .featured .art{background:#fbf3ec;display:flex;align-items:center;justify-content:center;padding:26px;border-left:1px solid var(--line)}
+  .featured .art img{width:100%;border-radius:8px;box-shadow:0 16px 36px -22px #0008;border:1px solid var(--line)}
+  @media(max-width:820px){.featured{grid-template-columns:1fr}.featured .art{border-left:none;border-top:1px solid var(--line)}}
+  .section-label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin:0 0 14px;display:flex;align-items:center;gap:12px}
+  .section-label::after{content:"";flex:1;height:1px;background:var(--line)}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
   @media(max-width:820px){.grid{grid-template-columns:1fr}}
   a.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);
@@ -52,10 +65,23 @@
   <div class="wrap">
     <header>
       <p class="kicker">Open Design · Quickstart</p>
-      <h1>One quickstart, set three ways.</h1>
-      <p class="lede">The same content — install, your first design, the two execution modes, the everyday commands — rendered in three design disciplines. Sourced from the repo’s <code>QUICKSTART.md</code>. Pick one and present it (↓ scroll or ← → arrows).</p>
+      <h1>Pick your quickstart.</h1>
+      <p class="lede">New here and not technical? <strong>Start with the plain-English guide.</strong> Want the developer setup with a bit of flair? Try the same thing rendered three ways.</p>
     </header>
 
+    <a class="featured" href="get-started.html">
+      <div class="copy">
+        <span class="tagline">★ Start here · no jargon</span>
+        <h2>Get started — the plain-English guide</h2>
+        <p>For anyone. Start the app, type a few sentences (real copy-paste examples for a business dashboard and a client pitch deck), and refine by chatting — with real screenshots of what you’ll see. No code, no design skills.</p>
+        <span class="go">Open the guide →</span>
+      </div>
+      <div class="art">
+        <img src="../screenshots/skills/github-dashboard.png" alt="A dashboard generated in Open Design" />
+      </div>
+    </a>
+
+    <p class="section-label">For developers · the install quickstart, styled three ways</p>
     <div class="grid">
       <a class="card" href="quickstart-nyt-data-viz.html">
         <div class="chip c-nyt">

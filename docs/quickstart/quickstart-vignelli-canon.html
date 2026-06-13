@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Open Design — Quickstart · The Vignelli Canon Edition</title>
+<meta name="description" content="The Open Design quickstart, set in Massimo Vignelli's discipline: one grid, Helvetica, two sizes, primary color as identifier — and the steps drawn as a subway diagram." />
+<style>
+  /* Helvetica house face — no web font; Liberation Sans/Arial keep the grotesque on Linux/headless. */
+  :root{
+    --vermilion:#F04E23;
+    --blue:#0039A6;     /* the ONE identifier color */
+    --yellow:#FFCC00;
+    --ink:#0A0A0A;
+    --paper:#F4F1EA;    /* warm paper */
+    --white:#FFFFFF;
+    --rule:#0A0A0A;
+    --grey:#6a6a66;
+    --t-body:16px;      /* two sizes only, per page: */
+    --t-head:32px;      /* heading ≈ 2× body */
+    --t-cap:12px;       /* hangs from the ruler */
+    --face:"Helvetica Neue",Helvetica,"Liberation Sans",Arial,sans-serif;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    --col: minmax(0,1fr);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--face);font-size:var(--t-body);line-height:1.5;font-weight:400;-webkit-font-smoothing:antialiased;letter-spacing:-.003em}
+  .deck{scroll-snap-type:y mandatory;height:100vh;overflow-y:scroll;scroll-behavior:smooth}
+  section{scroll-snap-align:start;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:72px max(28px,calc(50vw - 540px));position:relative}
+  .wrap{width:100%;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(12,var(--col));gap:24px}
+
+  /* ruler + hanging label/heading (the core Vignelli move) */
+  .ruler{grid-column:1 / -1;border-top:2px solid var(--rule);padding-top:10px;margin-top:0;display:flex;justify-content:space-between;align-items:baseline}
+  .label{font-size:var(--t-cap);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .label.id{color:var(--blue)}
+  .label.mut{color:var(--grey);font-weight:400;letter-spacing:.08em}
+  h1{font-size:clamp(40px,7vw,84px);font-weight:700;line-height:.98;letter-spacing:-.025em;margin:0}
+  h2{font-size:var(--t-head);font-weight:700;line-height:1.06;letter-spacing:-.02em;margin:0}
+  p{margin:0;max-width:62ch}
+  .body{grid-column:1 / 8;font-size:var(--t-body);line-height:1.55}
+  .body.narrow{grid-column:1 / 7}
+  .aside{grid-column:9 / -1;font-size:var(--t-cap);line-height:1.6;color:var(--grey)}
+  strong{font-weight:700}
+  code{font-family:var(--mono);font-size:.9em;background:#0a0a0a0d;padding:1px 5px;border-radius:0}
+  a{color:var(--blue);text-decoration:none;border-bottom:1px solid #0039a644}
+  .mt{margin-top:18px}.mt-s{margin-top:10px}
+
+  /* cover — signage panel: white Helvetica on signal blue */
+  .cover{background:var(--paper)}
+  .panel{grid-column:1 / -1;background:var(--blue);color:#fff;padding:48px 44px;position:relative}
+  .panel .sq{position:absolute;top:0;right:0;width:90px;height:90px;background:var(--yellow)}
+  .panel .sq b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:700;font-size:40px}
+  .panel h1{color:#fff}
+  .panel .sub{color:#fff;font-size:var(--t-head);font-weight:400;margin-top:14px;max-width:24ch;line-height:1.1}
+  .panel .meta{color:#cdd8ef;font-size:var(--t-cap);letter-spacing:.08em;text-transform:uppercase;margin-top:30px}
+
+  /* intangibles list */
+  .triad{grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:8px;border-top:2px solid var(--ink)}
+  .triad div{padding:20px 22px 24px;border-right:1px solid #0a0a0a22}
+  .triad div:last-child{border-right:none}
+  .triad h3{font-size:var(--t-cap);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin:0 0 10px}
+  .triad p{font-size:var(--t-body);max-width:34ch}
+
+  /* requirements grid */
+  .specs{grid-column:1 / -1;margin-top:6px}
+  .spec-row{display:grid;grid-template-columns:2fr 2fr 6fr;gap:24px;border-top:1px solid #0a0a0a22;padding:14px 0}
+  .spec-row:first-child{border-top:2px solid var(--ink)}
+  .spec-row .k{font-weight:700}
+  .spec-row .v{color:var(--blue);font-weight:700}
+  .spec-row .n{color:var(--grey);font-size:var(--t-cap);line-height:1.55}
+
+  /* command lists hang from a ruler */
+  .cmds{grid-column:1 / 8;margin-top:6px}
+  .cmds.two{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:36px}
+  .cmd-block h4{font-size:var(--t-cap);font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);border-top:2px solid var(--ink);padding-top:8px;margin:0 0 8px}
+  pre{font-family:var(--mono);font-size:14px;line-height:1.85;margin:0;background:transparent;color:var(--ink)}
+  pre .c{color:var(--grey)}
+  pre .d{color:var(--blue);font-weight:700}  /* the command digit/identifier */
+  pre b{font-weight:700}
+
+  /* numbered steps */
+  ol.steps{grid-column:1 / 9;list-style:none;counter-reset:s;margin:6px 0 0;padding:0;border-top:2px solid var(--ink)}
+  ol.steps li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid #0a0a0a18}
+  ol.steps li::before{content:counter(s,decimal-leading-zero);font-weight:700;color:var(--blue);font-size:var(--t-body)}
+  ol.steps li b{font-weight:700}
+
+  /* two modes columns */
+  .modes{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:6px;border-top:2px solid var(--ink)}
+  .modes > div{padding:20px 24px 22px;border-right:1px solid #0a0a0a22}
+  .modes > div:last-child{border-right:none}
+  .modes .tag{font-size:var(--t-cap);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin:0 0 12px}
+  .modes .tag.id{color:var(--blue)}
+  .modes .tag.mut{color:var(--grey)}
+  .modes .flowline{font-family:var(--mono);font-size:12.5px;line-height:1.6;color:#222;margin-top:12px}
+
+  /* diagram */
+  .diagram{grid-column:1 / -1;margin-top:8px}
+  .diagram svg{width:100%;height:auto;display:block}
+  .legend{grid-column:1 / -1;display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;font-size:var(--t-cap);color:var(--grey)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .legend i{width:14px;height:14px;border-radius:50%;display:inline-block}
+
+  /* fixed UI */
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--blue);width:0;z-index:50;transition:width .2s}
+  .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:50}
+  .dots button{width:8px;height:8px;border-radius:50%;border:1px solid var(--ink);background:transparent;padding:0;cursor:pointer}
+  .dots button[aria-current="true"]{background:var(--blue);border-color:var(--blue)}
+  .hint{position:fixed;bottom:18px;right:28px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);z-index:50}
+  @media(max-width:860px){
+    .wrap{grid-template-columns:repeat(6,var(--col))}
+    .body,.body.narrow,.cmds,ol.steps{grid-column:1 / -1}
+    .aside{grid-column:1 / -1;margin-top:14px}
+    .triad,.modes,.cmds.two{grid-template-columns:1fr}
+    .triad div,.modes>div{border-right:none;border-bottom:1px solid #0a0a0a22}
+    .spec-row{grid-template-columns:1fr;gap:4px}
+    .dots,.hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="dots" id="dots" aria-label="Slides"></nav>
+<div class="hint">↓ / arrows</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 — COVER (signage panel) -->
+  <section class="cover">
+    <div class="wrap">
+      <div class="panel">
+        <div class="sq"><b>OD</b></div>
+        <div class="label" style="color:#cdd8ef;margin-bottom:18px">Open Design · Quickstart</div>
+        <h1>Prompt → prototype.</h1>
+        <p class="sub">A local-first design tool, set in one discipline.</p>
+        <p class="meta">Helvetica · one grid · two sizes · primary color as identifier — The Vignelli Canon Edition</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — INTANGIBLES -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">00 · The intangibles</span><span class="label mut">Decide before you draw</span></div>
+      <h2 style="grid-column:1/9;margin-top:18px">Search for the meaning first.</h2>
+      <p class="body mt">Open Design drives the coding agent already on your machine — Claude Code, Codex, Gemini, OpenCode, Cursor Agent, Qwen, Devin, Copilot — or a BYOK API key, and turns one sentence into a live, sandboxed design you save to disk. This guide is set the way Vignelli would set it: nothing decorative, the white space carrying the hierarchy.</p>
+      <div class="triad">
+        <div><h3>Semantics</h3><p>A blank canvas is the enemy. The job is to get from intent to a working artifact with the least ceremony.</p></div>
+        <div><h3>Appropriateness</h3><p>Local-first, terminal-native. The tool meets the developer where the work already lives — the repo, the CLI.</p></div>
+        <div><h3>Timelessness</h3><p>One lifecycle entry point. One artifact contract. Primary structure that outlasts any one model or agent.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — DIAGRAM (the route map) -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">01 · The system</span><span class="label mut">Four lines · evenly spaced stops</span></div>
+      <h2 style="grid-column:1/-1;margin:16px 0 6px">The quickstart, as a diagram.</h2>
+      <div class="diagram" role="img" aria-label="A Vignelli-style transit diagram of four lines — Install, Design, Modes, Operate — branching from one START interchange.">
+        <svg viewBox="0 0 980 360" font-family="Helvetica, 'Liberation Sans', Arial, sans-serif">
+          <!-- trunk -->
+          <line x1="96" y1="56" x2="96" y2="316" stroke="#0A0A0A" stroke-width="6"/>
+          <!-- START interchange -->
+          <circle cx="96" cy="40" r="11" fill="#fff" stroke="#0A0A0A" stroke-width="5"/>
+          <text x="116" y="45" font-size="14" font-weight="700" fill="#0A0A0A">START</text>
+
+          <!-- helper: each line = 45° stub off trunk, then horizontal -->
+          <!-- LINE I — Install (blue), y=86 -->
+          <path d="M96,56 L126,86 L900,86" fill="none" stroke="#0039A6" stroke-width="6"/>
+          <g fill="#0039A6"><circle cx="300" cy="86" r="9"/><circle cx="520" cy="86" r="9"/><circle cx="740" cy="86" r="9"/></g>
+          <circle cx="148" cy="86" r="14" fill="#0039A6"/><text x="148" y="91" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">I</text>
+          <g font-size="13" font-weight="700" fill="#0A0A0A" text-anchor="middle">
+            <text x="300" y="72">corepack enable</text>
+            <text x="520" y="72">pnpm install</text>
+            <text x="740" y="72">tools-dev run web</text>
+          </g>
+
+          <!-- LINE D — Design (vermilion), y=156 -->
+          <path d="M96,126 L126,156 L900,156" fill="none" stroke="#F04E23" stroke-width="6"/>
+          <g fill="#F04E23"><circle cx="270" cy="156" r="9"/><circle cx="450" cy="156" r="9"/><circle cx="630" cy="156" r="9"/><circle cx="810" cy="156" r="9"/></g>
+          <circle cx="148" cy="156" r="14" fill="#F04E23"/><text x="148" y="161" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">D</text>
+          <g font-size="13" font-weight="700" fill="#0A0A0A" text-anchor="middle">
+            <text x="270" y="142">skill + system</text>
+            <text x="450" y="142">type prompt</text>
+            <text x="630" y="142">renders live</text>
+            <text x="810" y="142">save to disk</text>
+          </g>
+
+          <!-- LINE M — Modes (yellow), y=226 -->
+          <path d="M96,196 L126,226 L900,226" fill="none" stroke="#FFCC00" stroke-width="6"/>
+          <g fill="#FFCC00" stroke="#0A0A0A" stroke-width="2"><circle cx="360" cy="226" r="9"/><circle cx="640" cy="226" r="9"/></g>
+          <circle cx="148" cy="226" r="14" fill="#FFCC00"/><text x="148" y="231" font-size="15" font-weight="700" fill="#0A0A0A" text-anchor="middle">M</text>
+          <g font-size="13" font-weight="700" fill="#0A0A0A" text-anchor="middle">
+            <text x="360" y="212">Local CLI · default</text>
+            <text x="640" y="212">API · BYOK</text>
+          </g>
+
+          <!-- LINE O — Operate (ink), y=296 -->
+          <path d="M96,266 L126,296 L900,296" fill="none" stroke="#0A0A0A" stroke-width="6"/>
+          <g fill="#0A0A0A"><circle cx="270" cy="296" r="9"/><circle cx="450" cy="296" r="9"/><circle cx="630" cy="296" r="9"/><circle cx="810" cy="296" r="9"/></g>
+          <circle cx="148" cy="296" r="14" fill="#0A0A0A"/><text x="148" y="301" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">O</text>
+          <g font-size="13" font-weight="700" fill="#0A0A0A" text-anchor="middle">
+            <text x="270" y="320">status</text>
+            <text x="450" y="320">logs</text>
+            <text x="630" y="320">check</text>
+            <text x="810" y="320">stop</text>
+          </g>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><i style="background:#0039A6"></i> Line I — Install</span>
+        <span><i style="background:#F04E23"></i> Line D — Design</span>
+        <span><i style="background:#FFCC00;border:1px solid #0A0A0A"></i> Line M — Modes</span>
+        <span><i style="background:#0A0A0A"></i> Line O — Operate</span>
+        <span>Solid dot = always stops. Ride I, then D.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — REQUIREMENTS -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">02 · Line I · before boarding</span><span class="label mut">Requirements</span></div>
+      <h2 style="grid-column:1/9;margin-top:16px">Three constants and one option.</h2>
+      <div class="specs">
+        <div class="spec-row"><div class="k">Node.js</div><div class="v">~24 (24.x)</div><div class="n">Enforced by <code>package.json#engines</code>. Node 22 is not supported.</div></div>
+        <div class="spec-row"><div class="k">pnpm</div><div class="v">10.33.2</div><div class="n">Pinned via <code>packageManager</code>; let <code>corepack</code> select it.</div></div>
+        <div class="spec-row"><div class="k">OS</div><div class="v">macOS · Linux · WSL2</div><div class="n">Primary paths. Windows native is best-effort.</div></div>
+        <div class="spec-row"><div class="k">Agent CLI</div><div class="v">optional</div><div class="n">Claude Code · Codex · Gemini · OpenCode · Cursor Agent · Qwen · Devin · Copilot — or none, then use BYOK API mode and <strong>Rescan</strong> in Settings → Execution mode.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — INSTALL -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">03 · Line I · run</span><span class="label mut">Two commands either way</span></div>
+      <h2 style="grid-column:1/-1;margin:16px 0 8px">Get it running.</h2>
+      <div class="cmds two">
+        <div class="cmd-block">
+          <h4>Dev — foreground</h4>
+<pre><span class="c"># from the repo root</span>
+<b>corepack enable</b>
+<b>pnpm install</b>
+<b>pnpm tools-dev run web</b>
+<span class="c"># open the URL it prints</span>
+
+<span class="c"># …or all three in background</span>
+<b>pnpm tools-dev</b></pre>
+        </div>
+        <div class="cmd-block">
+          <h4>Docker — no node / pnpm</h4>
+<pre><b>cd deploy</b>
+<b>cp .env.example .env</b>
+<b>openssl rand -hex 32</b>
+<span class="c"># paste into OD_API_TOKEN</span>
+<b>docker compose up -d</b>
+<span class="c"># http://localhost:7456</span></pre>
+        </div>
+      </div>
+      <p class="aside" style="grid-column:1/-1;margin-top:18px;color:var(--grey)"><strong>One rule, no exceptions.</strong> <code>pnpm tools-dev</code> is the only lifecycle entry point. The legacy <code>pnpm dev</code> / <code>pnpm start</code> aliases were removed by design — equity of the system over the convenience of the moment.</p>
+    </div>
+  </section>
+
+  <!-- 6 — FIRST DESIGN -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">04 · Line D · design</span><span class="label mut">Your first artifact</span></div>
+      <h2 style="grid-column:1/9;margin:16px 0 4px">Type a prompt. Save the result.</h2>
+      <ol class="steps">
+        <li><span><b>Auto-detect.</b> On first load the app finds your agent CLI and defaults to the <code>web-prototype</code> skill + the <strong>Neutral Modern</strong> design system.</span></li>
+        <li><span><b>Choose the stack.</b> In the top bar pick a <strong>Skill</strong> (Prototype · Deck · Template · Design-system) and a <strong>Design system</strong> — 129 ship in the box: 2 starters, 70 product systems, 57 design skills.</span></li>
+        <li><span><b>Send.</b> Type the prompt and submit. Tokens stream into the left pane; the parsed <code>&lt;artifact&gt;</code> renders live in a sandboxed iframe on the right.</span></li>
+        <li><span><b>Persist.</b> Click <strong>Save to disk</strong> → <code>./.od/artifacts/&lt;ts&gt;-&lt;slug&gt;/index.html</code>.</span></li>
+      </ol>
+      <p class="aside" style="grid-column:9/-1;align-self:start;margin-top:60px">The prompt is composed in three layers: <code>BASE_SYSTEM_PROMPT</code> + the active design system (DESIGN.md) + the active skill (SKILL.md). Swap either in the top bar and the next send uses the new stack.</p>
+    </div>
+  </section>
+
+  <!-- 7 — TWO MODES -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">05 · Line M · modes</span><span class="label mut">Two ways to reach a model</span></div>
+      <h2 style="grid-column:1/-1;margin:16px 0 6px">One canvas. Either engine.</h2>
+      <div class="modes">
+        <div>
+          <p class="tag id">Local CLI — default</p>
+          <p>The path Open Design picks when it detects an installed agent. No key to paste.</p>
+          <p class="flowline">frontend → daemon /api/chat<br>→ spawn(&lt;agent&gt;) → stdout<br>→ SSE → artifact → preview</p>
+        </div>
+        <div>
+          <p class="tag mut">API — BYOK fallback</p>
+          <p>Anthropic · OpenAI · Azure OpenAI · Google Gemini. Used when no CLI is present, or by preference.</p>
+          <p class="flowline">frontend → daemon /api/proxy/{provider}/stream<br>→ normalized SSE<br>→ artifact → preview</p>
+        </div>
+      </div>
+      <p class="aside" style="grid-column:1/-1;margin-top:18px">Both feed the <strong>same</strong> artifact parser and the <strong>same</strong> sandboxed iframe. Only the transport differs — local CLIs fold the system prompt into the user message because they have no separate system channel.</p>
+    </div>
+  </section>
+
+  <!-- 8 — OPERATE / FOOTER -->
+  <section>
+    <div class="wrap">
+      <div class="ruler"><span class="label id">06 · Line O · operate</span><span class="label mut">Keep this nearby</span></div>
+      <h2 style="grid-column:1/-1;margin:16px 0 8px">The everyday commands.</h2>
+      <div class="cmds two">
+        <div class="cmd-block">
+          <h4>Lifecycle</h4>
+<pre><b>pnpm tools-dev</b>          <span class="c"># all 3, background</span>
+<b>pnpm tools-dev run web</b>  <span class="c"># daemon+web, fg</span>
+<b>pnpm tools-dev status</b>   <span class="c"># inspect</span>
+<b>pnpm tools-dev logs</b>     <span class="c"># tail logs</span>
+<b>pnpm tools-dev check</b>    <span class="c"># status+logs+dx</span>
+<b>pnpm tools-dev stop</b>     <span class="c"># stop all</span></pre>
+        </div>
+        <div class="cmd-block">
+          <h4>Checks &amp; data</h4>
+<pre><b>pnpm guard</b>              <span class="c"># repo checks</span>
+<b>pnpm typecheck</b>          <span class="c"># workspace types</span>
+<span class="c"># data under .od/ (gitignored):</span>
+<span class="c">#  app.sqlite · projects/…</span>
+<span class="c">#  artifacts/ · saved renders</span>
+<span class="c">#  projects/&lt;id&gt;/ · agent cwd</span></pre>
+        </div>
+      </div>
+      <p class="aside" style="grid-column:1/-1;margin-top:18px">Go deeper: <a href="../architecture.md">architecture.md</a> · <a href="../skills-protocol.md">skills-protocol.md</a> · <a href="../agent-adapters.md">agent-adapters.md</a> · <a href="../modes.md">modes.md</a> · <a href="../roadmap.md">roadmap.md</a> · <a href="../../QUICKSTART.md">QUICKSTART.md</a>. <em>“I love systems and despise happenstance.” — M.V.</em></p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const deck=document.getElementById('deck');
+  const sections=[...deck.querySelectorAll('section')];
+  const dots=document.getElementById('dots');
+  const progress=document.getElementById('progress');
+  sections.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Panel '+(i+1));b.addEventListener('click',()=>s.scrollIntoView({behavior:'smooth'}));dots.appendChild(b);});
+  const dotEls=[...dots.children];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const i=sections.indexOf(e.target);dotEls.forEach((d,j)=>d.setAttribute('aria-current',j===i?'true':'false'));progress.style.width=((i+1)/sections.length*100)+'%';}}),{root:deck,threshold:.55});
+  sections.forEach(s=>io.observe(s));
+  function go(d){const cur=dotEls.findIndex(x=>x.getAttribute('aria-current')==='true');const n=Math.min(sections.length-1,Math.max(0,cur+d));sections[n].scrollIntoView({behavior:'smooth'});}
+  addEventListener('keydown',e=>{
+    if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(1);}
+    else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
+    else if(e.key==='Home'){e.preventDefault();sections[0].scrollIntoView({behavior:'smooth'});}
+    else if(e.key==='End'){e.preventDefault();sections.at(-1).scrollIntoView({behavior:'smooth'});}
+  });
+</script>
+</body>
+</html>

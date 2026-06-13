@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Open Design — Quickstart · The Subway Campaign</title>
+<meta name="description" content="An MTA out-of-home campaign that doubles as the Open Design quickstart: prompt to prototype, between stations." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#101010;
+    --paper:#f4f0e6;          /* warm off-white */
+    --tile:#f6f6f3;           /* station tile */
+    --hi:#ffd400;             /* signal hi-vis yellow — the brand */
+    --hi-deep:#e6bf00;
+    --pop:#ff4d2e;            /* vermilion pop */
+    --steel:#b9bcc0;
+    --steel-d:#7e8389;
+    /* MTA bullet colors */
+    --b-yellow:#fccc0a;--b-red:#ee352e;--b-green:#00933c;--b-orange:#ff6319;
+    --display:"Archivo",-apple-system,Helvetica,Arial,sans-serif;
+    --body:"Inter",-apple-system,Helvetica,Arial,sans-serif;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--ink);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .deck{scroll-snap-type:y mandatory;height:100vh;overflow-y:scroll;scroll-behavior:smooth}
+  section{scroll-snap-align:start;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:54px max(20px,calc(50vw - 520px));position:relative;overflow:hidden}
+  .wrap{width:100%;max-width:1040px;margin:0 auto;position:relative;z-index:2}
+
+  /* ---------- subway environments ---------- */
+  /* white-tile wall */
+  .tilewall{background:
+      linear-gradient(var(--tile),var(--tile)),
+      repeating-linear-gradient(0deg,#0000 0 38px,#0001 38px 40px),
+      repeating-linear-gradient(90deg,#0000 0 78px,#0001 78px 80px);
+    background-blend-mode:normal;}
+  .platform-edge{position:absolute;left:0;right:0;bottom:0;height:46px;background:#1a1a1a;z-index:1}
+  .platform-edge::before{content:"";position:absolute;top:0;left:0;right:0;height:14px;background:repeating-linear-gradient(90deg,var(--hi) 0 26px,#1a1a1a 26px 40px)}
+
+  /* steel poster frame */
+  .frame{border:10px solid var(--steel);border-radius:6px;background:#fff;
+    box-shadow:0 2px 0 var(--steel-d), 0 26px 50px -18px #000a, inset 0 0 0 2px #fff;}
+  /* backlit lightbox */
+  .lightbox{background:#fff;border:6px solid #d7d7d2;box-shadow:0 0 60px 6px #ffd40055, 0 26px 50px -18px #000a;}
+
+  /* ---------- type ---------- */
+  .masthead-kicker,.fmt{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+  .fmt{color:var(--pop);margin:0 0 14px}
+  h1{font-family:var(--display);font-weight:900;line-height:.92;letter-spacing:-.02em;margin:0;text-transform:uppercase}
+  h2{font-family:var(--display);font-weight:900;line-height:.96;letter-spacing:-.015em;margin:0 0 16px;text-transform:uppercase}
+  .ad-head{font-family:var(--display);font-weight:900;line-height:.94;letter-spacing:-.02em;text-transform:uppercase}
+  p{margin:0 0 12px;max-width:64ch}
+  .lede{font-size:20px;line-height:1.45}
+  strong{font-weight:700}
+  code{font-family:var(--mono);font-size:.88em;background:#1112;padding:1px 6px;border-radius:4px}
+  a{color:inherit}
+
+  /* ---------- subway bullet ---------- */
+  .bullet{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;
+    color:#fff;font-family:var(--display);font-weight:900;font-size:24px;flex:0 0 auto;box-shadow:0 2px 0 #0003}
+  .bullet.sm{width:30px;height:30px;font-size:16px}
+  .b-I{background:var(--b-yellow);color:#101010}
+  .b-D{background:var(--b-red)}
+  .b-M{background:var(--b-green)}
+  .b-O{background:var(--b-orange);color:#101010}
+
+  /* ---------- 1 cover ---------- */
+  .cover{background:var(--ink);color:#fff}
+  .cover .wrap{max-width:1040px}
+  .toprule{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--hi);padding-bottom:12px;margin-bottom:40px}
+  .toprule span{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--hi)}
+  .wordmark{font-family:var(--display);font-weight:900;letter-spacing:-.03em;line-height:.82;text-transform:uppercase;color:#fff}
+  .wordmark .od{color:var(--hi)}
+  .cover .tag{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.02em;color:#fff;margin-top:28px;font-size:clamp(18px,2.4vw,30px)}
+  .cover .tag em{color:var(--hi);font-style:normal}
+  .bulletline{display:flex;gap:12px;margin-top:34px;align-items:center;flex-wrap:wrap}
+  .bulletline small{font-family:var(--body);font-size:13px;color:#bbb;margin-left:6px}
+
+  /* ---------- brief / manifesto ---------- */
+  .brief{background:var(--hi)}
+  .brief h2,.brief h1{color:var(--ink)}
+  .manifesto{background:var(--pop);color:#fff}
+  .manifesto h1{font-size:clamp(46px,8.5vw,120px)}
+  .manifesto .sub{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:24px;font-size:clamp(15px,2vw,22px)}
+
+  /* ---------- brand book ---------- */
+  .brandbook{background:var(--paper)}
+  .bb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px}
+  .bb-card{background:#fff;border:2px solid var(--ink);padding:18px;border-radius:4px}
+  .bb-card h3{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin:0 0 12px;color:#666}
+  .swatches{display:flex;gap:0;border-radius:4px;overflow:hidden;border:2px solid var(--ink)}
+  .swatches div{height:54px;flex:1}
+  .voicelist{list-style:none;padding:0;margin:0;font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:14px;line-height:1.9}
+  @media(max-width:820px){.bb-grid{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- placement (the work) ---------- */
+  .work{background:var(--ink)}
+  .work .wrap{max-width:1080px}
+  .placement{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center}
+  .ad{padding:40px;border-radius:6px;position:relative;min-height:300px;display:flex;flex-direction:column;justify-content:center}
+  .ad.cards{background:#fff;color:var(--ink)}
+  .ad.cards .ad-head{font-size:clamp(26px,3.4vw,40px)}
+  .caption{color:#fff}
+  .caption .fmt{color:var(--hi)}
+  .caption h2{color:#fff;font-size:clamp(24px,3vw,38px)}
+  .caption p{color:#c9c9c4}
+  .runlist{list-style:none;padding:0;margin:14px 0 0}
+  .runlist li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid #fff2;color:#e8e8e4;font-size:15px}
+  .runlist .n{font-family:var(--display);font-weight:900;color:var(--hi);min-width:24px}
+  pre{font-family:var(--mono);font-size:14px;line-height:1.7;background:#101010;color:#f3f3ee;padding:16px 18px;border-radius:6px;margin:10px 0 0;overflow:auto;border:1px solid #000}
+  pre .c{color:#8a8a82}.k{color:var(--hi)}
+  @media(max-width:820px){.placement{grid-template-columns:1fr;gap:22px}.ad{padding:26px;min-height:0}}
+
+  /* in-app payoff phone */
+  .phone{width:230px;margin:0 auto;background:#101010;border-radius:30px;padding:12px;box-shadow:0 26px 60px -16px #000c, inset 0 0 0 2px #2a2a2a}
+  .phone .screen{background:#fff;border-radius:20px;overflow:hidden;aspect-ratio:9/17}
+  .phone .bar{background:var(--ink);color:var(--hi);font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:.1em;padding:10px 12px}
+  .phone .body{padding:14px}
+  .phone .skel{height:9px;border-radius:4px;background:#eee;margin:8px 0}
+  .phone .skel.hi{background:var(--hi)}
+  .phone .skel.pop{background:var(--pop);width:60%}
+
+  /* media run table */
+  .runplan{background:var(--tile)}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-family:var(--body);font-size:15px;background:#fff;border:2px solid var(--ink)}
+  th{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:12px;text-align:left;background:var(--ink);color:var(--hi);padding:11px 14px}
+  td{padding:11px 14px;border-bottom:1px solid #e3e0d6;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td:first-child{font-family:var(--display);font-weight:800;white-space:nowrap}
+
+  /* footer */
+  .footer{background:var(--ink);color:#fff}
+  .footer .wordmark{font-size:clamp(40px,9vw,130px)}
+  .footer a{color:var(--hi);text-decoration:none;border-bottom:1px solid #ffffff33}
+
+  /* fixed UI */
+  .progress{position:fixed;top:0;left:0;height:4px;background:var(--hi);width:0;z-index:50;transition:width .2s}
+  .dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:11px;z-index:50}
+  .dots button{width:11px;height:11px;border:2px solid #fff;background:#0006;border-radius:50%;padding:0;cursor:pointer;transition:.2s}
+  .dots button[aria-current="true"]{background:var(--hi);border-color:var(--hi);transform:scale(1.3)}
+  .hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff8;z-index:50}
+  @media(max-width:820px){.dots,.hint{display:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="dots" id="dots" aria-label="Slides"></nav>
+<div class="hint">↓ ride the line · ← → arrows</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 — MASTHEAD / COVER -->
+  <section class="cover">
+    <div class="wrap">
+      <div class="toprule"><span>MTA · Out-of-Home</span><span>Quickstart, in public</span><span>Spring ’26</span></div>
+      <h1 class="wordmark" style="font-size:clamp(58px,13vw,168px)"><span class="od">OPEN</span> DESIGN</h1>
+      <p class="tag">The terminal in your pocket is now a <em>design studio</em>.</p>
+      <div class="bulletline">
+        <span class="bullet b-I">I</span><span class="bullet b-D">D</span><span class="bullet b-M">M</span><span class="bullet b-O">O</span>
+        <small>Four lines · Install · Design · Modes · Operate. Ride them in order.</small>
+      </div>
+    </div>
+    <div class="platform-edge"></div>
+  </section>
+
+  <!-- 2 — THE BRIEF -->
+  <section class="brief tilewall">
+    <div class="wrap">
+      <p class="fmt" style="color:var(--ink);opacity:.6">The Brief</p>
+      <h2 style="font-size:clamp(32px,5.2vw,64px)">Get a developer from prompt to working prototype before the next stop.</h2>
+      <p class="lede" style="color:#1a1a1a;max-width:60ch"><strong>Open Design is local-first.</strong> It drives the coding agent already installed on your machine — Claude Code, Codex, Gemini, OpenCode, Cursor Agent, Qwen, Devin, Copilot — and turns one sentence into a live, sandboxed HTML design you can save to disk. No cloud account. No blank canvas.</p>
+      <p style="color:#1a1a1a;max-width:60ch">No agent installed? Drop in a <strong>BYOK API key</strong> and the same loop runs against Anthropic, OpenAI, Azure, or Gemini.</p>
+    </div>
+    <div class="platform-edge"></div>
+  </section>
+
+  <!-- 3 — MANIFESTO -->
+  <section class="manifesto">
+    <div class="wrap">
+      <p class="fmt" style="color:#fff;opacity:.7">The Idea</p>
+      <h1>You type.<br>It builds.<br>You save.</h1>
+      <p class="sub">A single prompt → an agent streams → one <code style="background:#fff3">&lt;artifact&gt;</code> is parsed out → it renders live → “Save to disk.” Five beats, every time.</p>
+    </div>
+  </section>
+
+  <!-- 4 — BRAND BOOK -->
+  <section class="brandbook">
+    <div class="wrap">
+      <p class="fmt">The Brand Book</p>
+      <h2 style="color:var(--ink);font-size:clamp(28px,4vw,48px)">One system. Room to play.</h2>
+      <div class="bb-grid">
+        <div class="bb-card">
+          <h3>Wordmark</h3>
+          <div class="wordmark" style="color:var(--ink);font-size:30px;line-height:.9">OPEN<br><span style="color:var(--hi-deep)">DESIGN</span></div>
+        </div>
+        <div class="bb-card">
+          <h3>Palette</h3>
+          <div class="swatches"><div style="background:var(--ink)"></div><div style="background:var(--hi)"></div><div style="background:var(--pop)"></div><div style="background:var(--paper)"></div></div>
+          <p style="font-size:12px;color:#666;margin:8px 0 0">Ink · Signal yellow · Vermilion · Paper. No blue, no purple, no AI-slop gradient.</p>
+        </div>
+        <div class="bb-card">
+          <h3>Type</h3>
+          <div style="font-family:var(--display);font-weight:900;font-size:30px;line-height:1">Archivo</div>
+          <div style="font-family:var(--body);font-size:14px;color:#555;margin-top:6px">Heavy grotesque headlines, Inter for the read — the OOH voice.</div>
+        </div>
+        <div class="bb-card">
+          <h3>Voice</h3>
+          <ul class="voicelist">
+            <li>Local-first</li><li>One prompt</li><li>Live preview</li><li>Save to disk</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — PLACEMENT: CAR CARDS = REQUIREMENTS -->
+  <section class="work">
+    <div class="wrap">
+      <div class="placement">
+        <div class="ad cards frame" style="border-color:var(--steel)">
+          <span class="bullet b-I" style="position:absolute;top:18px;right:18px">I</span>
+          <p class="fmt" style="color:var(--pop)">Interior car card</p>
+          <div class="ad-head">Pack light.<br>Three numbers<br>and an option.</div>
+          <ul style="list-style:none;padding:0;margin:18px 0 0;font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:15px;line-height:2;color:#222">
+            <li><span style="color:var(--pop)">→</span> Node ~24 (Node 24.x)</li>
+            <li><span style="color:var(--pop)">→</span> pnpm 10.33.2 via Corepack</li>
+            <li><span style="color:var(--pop)">→</span> macOS · Linux · WSL2</li>
+            <li><span style="color:var(--pop)">→</span> A CLI — or a BYOK key</li>
+          </ul>
+        </div>
+        <div class="caption">
+          <p class="fmt">Line I · Install · stop 1</p>
+          <h2>What you bring aboard</h2>
+          <p>Node 22 won’t board — <code>package.json#engines</code> pins <code>~24</code>. If the daemon can’t see a CLI you installed, its folder isn’t on the daemon process’s <code>PATH</code>; fix it, then hit <strong>Rescan</strong> in Settings → Execution mode.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — PLACEMENT: 2-SHEET POSTER = INSTALL -->
+  <section class="work tilewall" style="color:#fff">
+    <div class="wrap">
+      <div class="placement">
+        <div class="caption">
+          <p class="fmt">Line I · Install · stop 2</p>
+          <h2 style="color:#fff">Two commands.<br>Pick your lane.</h2>
+          <p>Dev mode runs daemon + web in the foreground. The bare command runs all three — daemon, web, desktop — in the background. Or skip Node entirely with Docker.</p>
+          <p style="color:#fff;opacity:.85"><strong style="color:var(--hi)">One rule:</strong> <code>pnpm tools-dev</code> is the only lifecycle entry point. Legacy <code>pnpm dev</code> / <code>pnpm start</code> were removed on purpose.</p>
+        </div>
+        <div class="ad lightbox" style="color:var(--ink);padding:30px">
+          <span class="bullet b-I" style="position:absolute;top:16px;right:16px">I</span>
+          <p class="fmt" style="color:var(--pop)">Backlit diorama</p>
+<pre style="background:#101010"><span class="c"># dev mode — foreground</span>
+<span class="k">corepack enable</span>
+<span class="k">pnpm install</span>
+<span class="k">pnpm tools-dev run web</span>
+
+<span class="c"># full desktop — background</span>
+<span class="k">pnpm tools-dev</span>
+
+<span class="c"># docker — no node/pnpm</span>
+<span class="k">cd deploy && cp .env.example .env</span>
+<span class="k">docker compose up -d</span>   <span class="c"># :7456</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 — PLACEMENT: PLATFORM TAKEOVER = FIRST DESIGN -->
+  <section class="work">
+    <div class="wrap">
+      <div class="placement" style="grid-template-columns:1fr">
+        <div class="ad" style="background:var(--hi);color:var(--ink);padding:46px">
+          <span class="bullet b-D" style="position:absolute;top:20px;right:20px">D</span>
+          <p class="fmt" style="color:var(--pop)">Platform wall takeover · Line D · Design</p>
+          <div class="ad-head" style="font-size:clamp(30px,5vw,62px);max-width:18ch">Type a prompt. Watch it design itself.</div>
+          <ul class="runlist" style="margin-top:22px">
+            <li><span class="n">1</span><span style="color:#1a1a1a">App <strong>auto-detects your CLI</strong>, defaults to the <code>web-prototype</code> skill + <strong>Neutral Modern</strong> system.</span></li>
+            <li><span class="n">2</span><span style="color:#1a1a1a">Pick a <strong>Skill</strong> (Prototype · Deck · Template · Design-system) and a <strong>Design system</strong> — 129 ship in the box.</span></li>
+            <li><span class="n">3</span><span style="color:#1a1a1a"><strong>Type</strong> what you want, hit <strong>Send</strong>. Tokens stream left; the artifact renders live in a sandboxed iframe on the right.</span></li>
+            <li><span class="n">4</span><span style="color:#1a1a1a">Click <strong>Save to disk</strong> → <code>./.od/artifacts/&lt;ts&gt;-&lt;slug&gt;/index.html</code>.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 — PLACEMENT: DIGITAL SCREEN = TWO MODES -->
+  <section class="work" style="color:#fff">
+    <div class="wrap">
+      <div class="placement">
+        <div class="caption">
+          <p class="fmt">Line M · Modes</p>
+          <h2 style="color:#fff">Two ways to reach a model.</h2>
+          <p><strong style="color:var(--hi)">Local CLI</strong> is the default the app picks when it finds an agent:<br><code>frontend → daemon /api/chat → spawn(agent) → SSE → artifact → preview</code>.</p>
+          <p><strong style="color:var(--hi)">API (BYOK)</strong> is the fallback — Anthropic, OpenAI, Azure, Gemini:<br><code>frontend → /api/proxy/{provider}/stream → SSE → artifact → preview</code>.</p>
+          <p style="opacity:.85">Both feed the <strong>same</strong> artifact parser and the <strong>same</strong> sandboxed iframe. Only the transport differs.</p>
+        </div>
+        <div class="ad" style="background:#0b0b0b;border:8px solid #000;border-radius:14px;box-shadow:0 0 50px #00933c33,0 26px 50px -18px #000a;padding:26px">
+          <span class="bullet b-M" style="position:absolute;top:16px;right:16px">M</span>
+          <p class="fmt" style="color:var(--b-green)">Digital platform screen</p>
+          <div class="ad-head" style="color:#fff;font-size:30px">Same canvas.<br>Either engine.</div>
+          <p style="color:#9a9a94;margin-top:14px;font-size:14px">Prompt = <code style="background:#fff2">BASE</code> + design system (DESIGN.md) + skill (SKILL.md). Swap either in the top bar; the next send uses the new stack.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — PLACEMENT: IN-APP PAYOFF -->
+  <section class="work tilewall">
+    <div class="wrap">
+      <div class="placement">
+        <div class="caption" style="color:#fff">
+          <p class="fmt">Line D · Design · the payoff</p>
+          <h2 style="color:#fff">The product speaks the same language as the ad.</h2>
+          <p>Streaming text on the left, a living prototype on the right — on your machine, in your repo. When it’s right, it’s a file you own under <code>.od/artifacts/</code>, not a render trapped in someone’s cloud.</p>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="bar">● OPEN DESIGN — live</div>
+            <div class="body">
+              <div class="skel hi" style="width:70%"></div>
+              <div class="skel" style="width:90%"></div>
+              <div class="skel" style="width:84%"></div>
+              <div class="skel pop"></div>
+              <div class="skel" style="width:78%"></div>
+              <div class="skel" style="width:92%"></div>
+              <div class="skel hi" style="width:50%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — MEDIA RUN PLAN (commands) -->
+  <section class="runplan">
+    <div class="wrap">
+      <p class="fmt">Line O · Operate · the media run</p>
+      <h2 style="color:var(--ink);font-size:clamp(28px,4vw,48px)">Your everyday placements</h2>
+      <table>
+        <thead><tr><th>Command</th><th>What runs</th></tr></thead>
+        <tbody>
+          <tr><td>pnpm tools-dev</td><td>daemon + web + desktop, in the background</td></tr>
+          <tr><td>pnpm tools-dev run web</td><td>daemon + web in the foreground (dev / e2e)</td></tr>
+          <tr><td>pnpm tools-dev status</td><td>inspect the managed runtimes</td></tr>
+          <tr><td>pnpm tools-dev logs</td><td>tail daemon / web / desktop logs</td></tr>
+          <tr><td>pnpm tools-dev check</td><td>status + recent logs + common diagnostics</td></tr>
+          <tr><td>pnpm tools-dev stop</td><td>stop everything</td></tr>
+          <tr><td>pnpm guard · typecheck</td><td>repo-level checks before you push</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:14px;color:#555;margin-top:14px"><strong>Stuck on the platform?</strong> “No agents found” → install <code>claude</code>/<code>codex</code>/<code>gemini</code>/… or switch to API mode. “Artifact never renders” → the model didn’t wrap output in <code>&lt;artifact&gt;</code>; try a stricter skill or a stronger model.</p>
+    </div>
+  </section>
+
+  <!-- 11 — FOOTER -->
+  <section class="footer">
+    <div class="wrap">
+      <p class="fmt" style="color:var(--hi)">End of the line</p>
+      <h1 class="wordmark"><span class="od">OPEN</span> DESIGN</h1>
+      <p class="tag" style="color:#fff;font-family:var(--display);font-weight:800;text-transform:uppercase;margin-top:20px">Prompt → prototype. Between stations.</p>
+      <p style="color:#bbb;margin-top:18px;max-width:62ch">Go deeper: <a href="../architecture.md">architecture.md</a> · <a href="../skills-protocol.md">skills-protocol.md</a> · <a href="../agent-adapters.md">agent-adapters.md</a> · <a href="../modes.md">modes.md</a> · <a href="../roadmap.md">roadmap.md</a> — and the full text in <a href="../../QUICKSTART.md">QUICKSTART.md</a>.</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const deck=document.getElementById('deck');
+  const sections=[...deck.querySelectorAll('section')];
+  const dots=document.getElementById('dots');
+  const progress=document.getElementById('progress');
+  sections.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Stop '+(i+1));b.addEventListener('click',()=>s.scrollIntoView({behavior:'smooth'}));dots.appendChild(b);});
+  const dotEls=[...dots.children];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const i=sections.indexOf(e.target);dotEls.forEach((d,j)=>d.setAttribute('aria-current',j===i?'true':'false'));progress.style.width=((i+1)/sections.length*100)+'%';}}),{root:deck,threshold:.55});
+  sections.forEach(s=>io.observe(s));
+  function go(d){const cur=dotEls.findIndex(x=>x.getAttribute('aria-current')==='true');const n=Math.min(sections.length-1,Math.max(0,cur+d));sections[n].scrollIntoView({behavior:'smooth'});}
+  addEventListener('keydown',e=>{
+    if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(1);}
+    else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
+    else if(e.key==='Home'){e.preventDefault();sections[0].scrollIntoView({behavior:'smooth'});}
+    else if(e.key==='End'){e.preventDefault();sections.at(-1).scrollIntoView({behavior:'smooth'});}
+  });
+</script>
+</body>
+</html>

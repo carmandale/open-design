@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Open Design — Quickstart · The Upshot Edition</title>
+<meta name="description" content="A New York Times / Upshot–grade quickstart for Open Design: from a single prompt to a live, saveable prototype." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f7f7f4;        /* warm newsprint */
+    --panel:#ffffff;
+    --ink:#121212;          /* near-black body */
+    --grey:#6b6b6b;         /* secondary */
+    --grey-2:#9a9a96;       /* tertiary, gridlines text */
+    --hairline:#e4e3dd;
+    --hero:#1a6091;         /* the ONE accent — the series that matters */
+    --hero-soft:#dbe7ef;
+    --mute:#c9c9c2;         /* "everything else is grey" */
+    --display:"Playfair Display",Georgia,serif;
+    --sans:"Libre Franklin",-apple-system,Helvetica,Arial,sans-serif;
+    --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--body);font-size:18px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    font-variant-numeric:tabular-nums; /* digits don't jitter */
+  }
+  .deck{scroll-snap-type:y mandatory;height:100vh;overflow-y:scroll;scroll-behavior:smooth}
+  section{
+    scroll-snap-align:start;min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:64px max(24px,calc(50vw - 470px));position:relative;
+  }
+  .wrap{width:100%;max-width:940px;margin:0 auto}
+  .kicker{
+    font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--hero);margin:0 0 18px;
+  }
+  .kicker .num{color:var(--grey-2)}
+  h1{font-family:var(--display);font-weight:800;line-height:1.04;letter-spacing:-.01em;margin:0 0 18px;font-size:clamp(40px,6.4vw,76px)}
+  h2{font-family:var(--display);font-weight:700;line-height:1.08;margin:0 0 14px;font-size:clamp(30px,4.4vw,50px)}
+  .dek{font-family:var(--body);font-size:clamp(19px,2.1vw,24px);color:#2b2b2b;max-width:42ch;margin:0 0 10px}
+  .sub{font-family:var(--sans);font-size:14px;color:var(--grey);max-width:60ch}
+  .source{font-family:var(--sans);font-size:12px;color:var(--grey-2);margin-top:26px;border-top:1px solid var(--hairline);padding-top:12px}
+  .source b{color:var(--grey);font-weight:600}
+  p{margin:0 0 14px;max-width:62ch}
+  a{color:var(--hero);text-decoration:none;border-bottom:1px solid var(--hero-soft)}
+  strong{font-weight:600}
+  .lede{font-size:22px;line-height:1.5}
+
+  /* annotated flow */
+  .flow{display:flex;align-items:stretch;gap:0;margin:30px 0 6px;flex-wrap:wrap}
+  .step{flex:1 1 140px;min-width:120px;padding:0 14px;border-left:2px solid var(--hairline);position:relative}
+  .step:first-child{border-left:2px solid var(--hero)}
+  .step .n{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--grey-2);text-transform:uppercase}
+  .step .t{font-family:var(--display);font-weight:700;font-size:20px;margin:4px 0 6px}
+  .step .d{font-family:var(--sans);font-size:13px;color:var(--grey);line-height:1.45}
+
+  /* chart */
+  .chart{margin:22px 0 8px}
+  .bar-row{display:grid;grid-template-columns:200px 1fr 64px;align-items:center;gap:14px;margin:0 0 14px}
+  .bar-label{font-family:var(--sans);font-size:14px;font-weight:600;text-align:right;color:var(--ink)}
+  .bar-label small{display:block;font-weight:400;color:var(--grey-2);font-size:12px}
+  .bar-track{position:relative;height:30px}
+  .bar-fill{height:100%;background:var(--mute);border-radius:2px}
+  .bar-fill.hero{background:var(--hero)}
+  .bar-val{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--ink)}
+  .axis{font-family:var(--sans);font-size:11px;color:var(--grey-2);border-top:1px solid var(--hairline);padding-top:6px;display:flex;justify-content:space-between;margin-left:214px}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-family:var(--sans);font-size:15px}
+  th{text-align:left;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);border-bottom:2px solid var(--ink);padding:8px 10px}
+  td{padding:10px;border-bottom:1px solid var(--hairline);vertical-align:top;color:#2b2b2b}
+  td:first-child{font-weight:600;color:var(--ink)}
+  td code,p code,li code{font-family:var(--mono);font-size:.86em;background:#efeee8;padding:1px 5px;border-radius:3px;color:#222}
+
+  /* code */
+  pre{font-family:var(--mono);font-size:14px;line-height:1.7;background:#1c1c1a;color:#f4f3ee;
+      padding:18px 20px;border-radius:6px;overflow:auto;margin:14px 0;border:1px solid #000}
+  pre .c{color:#8d8d86}      /* comment */
+  pre .k{color:#7ec5ef}      /* command */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}.bar-row{grid-template-columns:120px 1fr 48px}.bar-label{font-size:12px}.axis{margin-left:134px}}
+
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:18px 0;max-width:64ch}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 46px;font-family:var(--body);font-size:17px;color:#2b2b2b}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:30px;height:30px;border-radius:50%;
+    background:var(--hero);color:#fff;font-family:var(--sans);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+  ol.steps li b{font-family:var(--sans);font-weight:600;color:var(--ink)}
+
+  .note{font-family:var(--sans);font-size:13.5px;color:var(--grey);border-left:3px solid var(--hero);padding:4px 0 4px 14px;margin:16px 0;max-width:60ch}
+
+  /* fixed UI */
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--hero);width:0;z-index:50;transition:width .2s ease}
+  .dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:11px;z-index:50}
+  .dots button{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--grey-2);background:transparent;padding:0;cursor:pointer;transition:all .2s}
+  .dots button[aria-current="true"]{background:var(--hero);border-color:var(--hero);transform:scale(1.25)}
+  .hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-family:var(--sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-2);z-index:50}
+  @media(max-width:720px){.dots,.hint{display:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="dots" id="dots" aria-label="Slides"></nav>
+<div class="hint">↓ scroll · ← → arrows · keys 1–8</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 — COVER -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">Open Design · Quickstart · <span class="num">The Upshot Edition</span></p>
+      <h1>From one sentence to a working prototype.</h1>
+      <p class="dek">Open Design drives the coding agent already on your machine — Claude Code, Codex, Gemini, and a dozen more — and turns a single prompt into a live, sandboxed design you can save to disk.</p>
+      <p class="source"><b>How to read this:</b> eight panels, each a step. Local-first · no cloud account required · runs on <code>pnpm tools-dev</code>. — Source: <i>QUICKSTART.md</i>, Open Design v0.10</p>
+    </div>
+  </section>
+
+  <!-- 2 — THE LOOP -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">01 · The loop</p>
+      <h2>Every design is the same five-beat motion.</h2>
+      <p class="dek">You type. An agent streams. The app reads one <code>&lt;artifact&gt;</code> tag out of the stream and renders it live. Then you save.</p>
+      <div class="flow">
+        <div class="step"><div class="n">Beat 1</div><div class="t">Prompt</div><div class="d">Pick a skill + a design system, type what you want, hit Send.</div></div>
+        <div class="step"><div class="n">Beat 2</div><div class="t">Agent</div><div class="d">Your local CLI (or a BYOK API) streams tokens into the left pane.</div></div>
+        <div class="step"><div class="n">Beat 3</div><div class="t">Parse</div><div class="d">The streaming parser pulls the <code>&lt;artifact&gt;</code> out as it arrives.</div></div>
+        <div class="step"><div class="n">Beat 4</div><div class="t">Render</div><div class="d">HTML paints live in a sandboxed iframe on the right.</div></div>
+        <div class="step"><div class="n">Beat 5</div><div class="t">Save</div><div class="d">“Save to disk” writes <code>.od/artifacts/&lt;ts&gt;-&lt;slug&gt;/index.html</code>.</div></div>
+      </div>
+      <p class="source">Same parser, same iframe, every time — only the transport upstream of it changes (panel 06).</p>
+    </div>
+  </section>
+
+  <!-- 3 — CATALOGUE CHART -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">02 · What ships in the box</p>
+      <h2>You are not starting from a blank palette.</h2>
+      <p class="sub">Built-in design systems, by source. Each one re-skins every prototype in that aesthetic. Counts at v0.10.</p>
+      <div class="chart" role="img" aria-label="Bar chart: 70 product systems, 57 design skills, 2 starters.">
+        <div class="bar-row">
+          <div class="bar-label">Product systems<small>imported from awesome-design-md</small></div>
+          <div class="bar-track"><div class="bar-fill hero" style="width:97%"></div></div>
+          <div class="bar-val">70</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Design skills<small>from awesome-design-skills</small></div>
+          <div class="bar-track"><div class="bar-fill" style="width:79%"></div></div>
+          <div class="bar-val">57</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Hand-authored starters<small>Neutral Modern · Warm Editorial</small></div>
+          <div class="bar-track"><div class="bar-fill" style="width:3%"></div></div>
+          <div class="bar-val">2</div>
+        </div>
+        <div class="axis"><span>0</span><span>36</span><span>72</span></div>
+      </div>
+      <p class="source"><b>129 systems in total.</b> Pair any one with a skill — Prototype, Deck, Template, or Design-system mode — and a single prompt yields a layout-appropriate result in that brand’s voice. — Source: <i>QUICKSTART.md</i> file map</p>
+    </div>
+  </section>
+
+  <!-- 4 — REQUIREMENTS -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">03 · Before you start</p>
+      <h2>Three numbers and an option.</h2>
+      <table>
+        <thead><tr><th>What</th><th>Version</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Node.js</td><td>~24 (24.x)</td><td>Enforced by <code>package.json#engines</code>. Node 22 is not supported.</td></tr>
+          <tr><td>pnpm</td><td>10.33.2</td><td>Pinned via <code>packageManager</code>; let <code>corepack</code> select it.</td></tr>
+          <tr><td>OS</td><td>macOS · Linux · WSL2</td><td>Primary paths. Windows native is best-effort.</td></tr>
+          <tr><td>Agent CLI</td><td>optional</td><td>Claude Code, Codex, Gemini, OpenCode, Cursor Agent, Qwen, Devin, Copilot… or none → use BYOK API mode.</td></tr>
+        </tbody>
+      </table>
+      <p class="note">If the daemon can’t see a CLI you installed, its directory isn’t on the <code>PATH</code> of the process running the daemon. Fix the PATH, then hit <b>Rescan</b> in Settings → Execution mode.</p>
+    </div>
+  </section>
+
+  <!-- 5 — INSTALL -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">04 · Get it running</p>
+      <h2>Pick a lane. Two commands either way.</h2>
+      <div class="cols">
+        <div>
+          <p class="sub" style="margin-bottom:8px"><b>Dev mode</b> — daemon + web in the foreground.</p>
+<pre><span class="c"># from the repo root</span>
+<span class="k">corepack enable</span>
+<span class="k">pnpm install</span>
+<span class="k">pnpm tools-dev run web</span>
+<span class="c"># open the URL tools-dev prints</span></pre>
+          <p class="sub" style="margin-top:14px"><b>Full desktop</b> — daemon + web + Electron in the background.</p>
+<pre><span class="k">pnpm tools-dev</span></pre>
+        </div>
+        <div>
+          <p class="sub" style="margin-bottom:8px"><b>Docker</b> — no local Node or pnpm.</p>
+<pre><span class="k">cd deploy</span>
+<span class="k">cp .env.example .env</span>
+<span class="k">openssl rand -hex 32</span>   <span class="c"># paste into OD_API_TOKEN</span>
+<span class="k">docker compose up -d</span>
+<span class="c"># http://localhost:7456</span></pre>
+        </div>
+      </div>
+      <p class="source"><b>One rule:</b> <code>pnpm tools-dev</code> is the only lifecycle entry point. The legacy <code>pnpm dev</code> / <code>pnpm start</code> aliases were removed on purpose.</p>
+    </div>
+  </section>
+
+  <!-- 6 — FIRST DESIGN -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">05 · Your first design</p>
+      <h2>Type a prompt. Watch it build itself.</h2>
+      <ol class="steps">
+        <li>On first load the app <b>auto-detects your agent CLI</b> and defaults to the <code>web-prototype</code> skill + the <b>Neutral Modern</b> design system.</li>
+        <li>In the top bar, choose a <b>Skill</b> (grouped Prototype · Deck · Template · Design-system) and a <b>Design system</b> to set the visual language.</li>
+        <li><b>Type a prompt</b> — e.g. “a pricing page for a calm habit-tracker” — and hit <b>Send</b>.</li>
+        <li>The agent <b>streams into the left pane</b>; the parsed artifact <b>renders live</b> in the sandboxed preview on the right.</li>
+        <li>When it settles, click <b>Save to disk</b> to persist it under <code>./.od/artifacts/</code>.</li>
+      </ol>
+      <p class="note">Behind every Send, the system prompt is composed in three layers: <code>BASE_SYSTEM_PROMPT</code> + the active <b>design system</b> (DESIGN.md) + the active <b>skill</b> (SKILL.md). Swap either in the top bar and the next send uses the new stack.</p>
+    </div>
+  </section>
+
+  <!-- 7 — TWO MODES -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">06 · Two ways to reach a model</p>
+      <h2>Local CLI by default; an API key as the fallback.</h2>
+      <p class="sub">The hero path is the one Open Design picks for you when it finds an agent. Both feed the identical artifact parser and the identical sandboxed iframe.</p>
+      <table>
+        <thead><tr><th>Mode</th><th>When</th><th>How a request flows</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--hero)">Local CLI</td><td>default — a CLI was detected</td><td><code>frontend → daemon /api/chat → spawn(&lt;agent&gt;) → stdout → SSE → artifact → preview</code></td></tr>
+          <tr><td>API (BYOK)</td><td>no CLI, or you prefer it</td><td><code>frontend → daemon /api/proxy/{provider}/stream → normalized SSE → artifact → preview</code></td></tr>
+        </tbody>
+      </table>
+      <p class="source">Providers in API mode: Anthropic · OpenAI · Azure OpenAI · Google Gemini. The only real difference is transport — local CLIs fold the system prompt into the user message because they have no separate system channel.</p>
+    </div>
+  </section>
+
+  <!-- 8 — CHEAT SHEET -->
+  <section>
+    <div class="wrap">
+      <p class="kicker">07 · Keep this nearby</p>
+      <h2>The everyday commands.</h2>
+      <div class="cols">
+        <div>
+<pre><span class="k">pnpm tools-dev</span>            <span class="c"># all 3, background</span>
+<span class="k">pnpm tools-dev run web</span>    <span class="c"># daemon+web, foreground</span>
+<span class="k">pnpm tools-dev status</span>     <span class="c"># inspect runtimes</span>
+<span class="k">pnpm tools-dev logs</span>       <span class="c"># tail logs</span>
+<span class="k">pnpm tools-dev check</span>      <span class="c"># status + logs + dx</span>
+<span class="k">pnpm tools-dev stop</span>       <span class="c"># stop everything</span></pre>
+        </div>
+        <div>
+<pre><span class="k">pnpm guard</span>                <span class="c"># repo-level checks</span>
+<span class="k">pnpm typecheck</span>            <span class="c"># workspace types</span>
+<span class="c"># data lives under .od/ (gitignored)</span>
+<span class="c">#   app.sqlite  · projects/conversations</span>
+<span class="c">#   artifacts/  · saved renders</span>
+<span class="c">#   projects/&lt;id&gt;/ · per-project cwd</span></pre>
+        </div>
+      </div>
+      <p class="source"><b>Stuck?</b> “No agents found” → install a CLI or switch to API mode. “Artifact never renders” → the model didn’t wrap output in <code>&lt;artifact&gt;</code>; try a stricter skill or stronger model. Go deeper: <a href="../architecture.md">architecture.md</a> · <a href="../skills-protocol.md">skills-protocol.md</a> · <a href="../agent-adapters.md">agent-adapters.md</a> · <a href="../modes.md">modes.md</a> · <a href="../roadmap.md">roadmap.md</a></p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const deck = document.getElementById('deck');
+  const sections = [...deck.querySelectorAll('section')];
+  const dots = document.getElementById('dots');
+  const progress = document.getElementById('progress');
+  sections.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.setAttribute('aria-label','Panel '+(i+1));
+    b.addEventListener('click',()=>s.scrollIntoView({behavior:'smooth'}));
+    dots.appendChild(b);
+  });
+  const dotEls=[...dots.children];
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const i=sections.indexOf(e.target);
+        dotEls.forEach((d,j)=>d.setAttribute('aria-current', j===i?'true':'false'));
+        progress.style.width=((i+1)/sections.length*100)+'%';
+      }
+    });
+  },{root:deck,threshold:.6});
+  sections.forEach(s=>io.observe(s));
+  function go(d){const cur=dotEls.findIndex(x=>x.getAttribute('aria-current')==='true');const n=Math.min(sections.length-1,Math.max(0,cur+d));sections[n].scrollIntoView({behavior:'smooth'});}
+  addEventListener('keydown',e=>{
+    if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(1);}
+    else if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
+    else if(e.key==='Home'){e.preventDefault();sections[0].scrollIntoView({behavior:'smooth'});}
+    else if(e.key==='End'){e.preventDefault();sections.at(-1).scrollIntoView({behavior:'smooth'});}
+    else if(/^[1-8]$/.test(e.key)){e.preventDefault();sections[+e.key-1]?.scrollIntoView({behavior:'smooth'});}
+  });
+</script>
+</body>
+</html>

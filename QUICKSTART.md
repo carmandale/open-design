@@ -4,6 +4,8 @@
 
 Run the full product locally.
 
+> **Prefer a visual walkthrough?** Open the [quickstart presentations](docs/quickstart/) — this same guide set three ways (NYT data-viz, an NYC subway campaign, and the Vignelli Canon). Each is a self-contained HTML deck; scroll or use the arrow keys.
+
 ## Environment requirements
 
 - **Node.js:** `~24` (Node 24.x). The repo enforces this through `package.json#engines`.
